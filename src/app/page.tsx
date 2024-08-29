@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
+
 import { UserButton } from '@/features/auth/components/UserButton';
 import { useCreateWorkspaceModal } from '@/features/workspaces/store/useCreateWorkspaceModal';
 
@@ -7,6 +9,7 @@ import { useGetWorkspaces } from '@/features/workspaces/api/useGetWorkspaces';
 import { useEffect, useMemo } from 'react';
 
 const Home = () => {
+  const router = useRouter();
   const [open, setOpen] = useCreateWorkspaceModal();
   const { data, isLoading } = useGetWorkspaces();
 
@@ -15,12 +18,11 @@ const Home = () => {
   useEffect(() => {
     if (isLoading) return;
     if (workspaceId) {
-      console.log('workspaceId', workspaceId);
+      router.replace(`/workspace/${workspaceId}`);
     } else if (!open) {
-      console.log('No workspaces');
       setOpen(true);
     }
-  }, [workspaceId, isLoading, open, setOpen]);
+  }, [workspaceId, isLoading, open, setOpen, router]);
 
   return (
     <UserButton />
