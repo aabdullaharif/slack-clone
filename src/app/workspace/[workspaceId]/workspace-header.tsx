@@ -4,6 +4,7 @@ import { ChevronDownIcon, ListFilterIcon, SquarePenIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Hint from '@/components/Hint'
 import { PreferencesModal } from './preferences-modal'
+import { InviteModal } from './invite-modal'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 import { Doc } from '../../../../convex/_generated/dataModel'
@@ -12,11 +13,19 @@ interface WorkspaceHeaderProps {
     workspace: Doc<"workspaces">;
     isAdmin: boolean;
 }
-const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) => {
+
+export const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) => {
     const [preferencesOpen, setPreferencesOpen] = useState(false);
+    const [inviteOpen, setInviteOpen] = useState(false);
 
     return (
         <>
+            <InviteModal
+                open={inviteOpen}
+                setOpen={setInviteOpen}
+                name={workspace.name}
+                joinCode={workspace.joinCode}
+            />
             <PreferencesModal
                 open={preferencesOpen}
                 setOpen={setPreferencesOpen}
@@ -48,7 +57,7 @@ const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) => {
                             isAdmin && (
                                 <>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem className='cursor-pointer py-2' onClick={() => { }}>
+                                    <DropdownMenuItem className='cursor-pointer py-2' onClick={() => { setInviteOpen(true) }}>
                                         Invite people to {workspace.name}
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
@@ -76,5 +85,3 @@ const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) => {
         </>
     )
 }
-
-export default WorkspaceHeader
