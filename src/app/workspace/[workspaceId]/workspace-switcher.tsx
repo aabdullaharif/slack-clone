@@ -28,7 +28,7 @@ const WorkspaceSwitcher = () => {
                     {
                         workspaceLoading ? (
                             <Loader className='size-5 animate-spin shrink-0' />
-                        ) : workspace?.name.charAt(0).toUpperCase()
+                        ) : workspace?.name?.charAt(0).toUpperCase()
                     }
                 </Button>
             </DropdownMenuTrigger>
