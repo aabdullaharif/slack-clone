@@ -20,7 +20,7 @@ type EditorValue = {
 
 interface EditorProps {
     variant?: "create" | "update";
-    onSubmit?: ({ image, body }: EditorValue) => void;
+    onSubmit?: ({ body, image }: EditorValue) => void;
     onCancel?: () => void;
     placeholder?: string;
     defaultValue: Delta | Op[];
@@ -73,8 +73,21 @@ const Editor = ({
                         enter: {
                             key: "Enter",
                             handler: () => {
-                                // TODO:
-                                return
+                                const text = quill.getText();
+                                const addedImage = imageElementRef.current?.files?.[0] || null;
+
+                                const isEmpty = !addedImage && text.replace(/<(.|\n)*?>/g, '').trim().length === 0;
+                                if (isEmpty) return;
+
+                                const body = JSON.stringify(quill.getContents());
+                                submitRef.current && submitRef.current({ body, image: addedImage });
+                            }
+                        },
+                        "shift enter": {
+                            key: "Enter",
+                            shiftKey: true,
+                            handler: () => {
+                                quill.insertText(quill.getSelection()?.index || 0, '\n');
                             }
                         }
                     }
@@ -131,7 +144,7 @@ const Editor = ({
         }
     }
 
-    const isEmpty = text.replace(/<(.|\n)*?>/g, '').trim().length === 0;
+    const isEmpty = !image && text.replace(/<(.|\n)*?>/g, '').trim().length === 0;
 
     return (
         <div className="flex flex-col">
@@ -142,7 +155,9 @@ const Editor = ({
                 onChange={(e) => { setImage(e.target.files![0]) }}
                 className='hidden'
             />
-            <div className="flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white">
+            <div className={cn("flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white",
+                disabled && "opacity-50 pointer-events-none"
+            )}>
                 <div ref={containerRef} className='h-full ql-custom' />
 
                 {
@@ -212,7 +227,7 @@ const Editor = ({
                                     disabled={disabled}
                                     size="sm"
                                     variant="outline"
-                                    onClick={() => { }}
+                                    onClick={onCancel}
                                 >
                                     Cancel
                                 </Button>
@@ -220,7 +235,12 @@ const Editor = ({
                                     disabled={disabled}
                                     size="sm"
                                     className='bg-[#007a5a] hover:bg-[#007a5a]/80 text-white'
-                                    onClick={() => { }}
+                                    onClick={() => {
+                                        onSubmit && onSubmit({
+                                            body: JSON.stringify(quillRef.current!.getContents()),
+                                            image,
+                                        })
+                                    }}
                                 >
                                     Save
                                 </Button>
@@ -239,7 +259,12 @@ const Editor = ({
                                                 'bg-white hover:bg-white text-muted-foreground'
                                                 : 'bg-[#007a5a] hover:bg-[#007a5a]/80 text-white'
                                         )}
-                                    onClick={() => { }}
+                                    onClick={() => {
+                                        onSubmit && onSubmit({
+                                            body: JSON.stringify(quillRef.current!.getContents()),
+                                            image,
+                                        })
+                                    }}
                                 >
                                     <MdSend className='size-4' />
                                 </Button>
