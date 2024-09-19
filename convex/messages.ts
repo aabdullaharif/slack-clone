@@ -91,7 +91,6 @@ export const create = mutation({
             channelId: args.channelId,
             parentMessageId: args.parentMessageId,
             conversionId: _conversionId,
-            updatedAt: Date.now(),
         });
 
         return messageId;
