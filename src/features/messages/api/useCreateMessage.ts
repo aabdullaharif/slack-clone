@@ -4,13 +4,13 @@ import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 
 
-type RequestType = { 
-    body: string, 
-    image?: Id<"_storage">, 
-    workspaceId: Id<"workspaces">, 
-    channelId?: Id<"channels">, 
+type RequestType = {
+    body: string,
+    image?: Id<"_storage">,
+    workspaceId: Id<"workspaces">,
+    channelId?: Id<"channels">,
     parentMessageId?: Id<"messages">,
-    conversationId?: Id<"conversions">
+    conversationId?: Id<"conversations">
 };
 type ResponseType = Id<"messages"> | null;
 
@@ -46,7 +46,7 @@ export const useCreateMessage = () => {
             setStatus('error');
             options?.onError?.(error as Error);
 
-            if(options?.throwError) {
+            if (options?.throwError) {
                 throw error;
             }
         } finally {
@@ -55,7 +55,7 @@ export const useCreateMessage = () => {
         }
     }, [mutation]);
 
-    return { 
+    return {
         mutate,
         data,
         error,
