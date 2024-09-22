@@ -1,6 +1,8 @@
 import { Message } from "./Message";
-import { format, isToday, isYesterday } from "date-fns";
+import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
 import { GetMessagesReturnType } from "@/features/members/api/useGetMessages";
+
+const TIME_THRESHOLD = 5;
 
 interface MessageListProps {
     memberName?: string;
@@ -43,29 +45,36 @@ export const MessageList = ({ memberName, memberImage, channelName, channelCreat
                             {formatDateLabel(dateKey)}
                         </span>
                     </div>
-                    {messages.map((message, index) => (
-                        <Message
-                            key={message._id}
-                            id={message._id}
-                            memberId={message.memberId}
-                            authorImage={message.user.image}
-                            authorName={message.user.name}
-                            isAuthor={false}
-                            reactions={message.reactions}
-                            body={message.body}
-                            image={message.image}
-                            updatedAt={message.updatedAt}
-                            createdAt={message._creationTime}
-                            isEditing={false}
-                            setEditingId={() => { }}
-                            isCompact={false}
-                            hideThreadButton={false}
-                            threadCount={message.threadCount}
-                            threadImage={message.threadImage}
-                            threadTimeStamp={message.threadTimeStamp}
-                        />
-                    ))}
+                    {messages.map((message, index) => {
+                        const previousMessage = messages[index - 1];
+                        const isCompact = previousMessage && previousMessage.user?._id === message.user?._id && differenceInMinutes(
+                            new Date(message._creationTime),
+                            new Date(previousMessage._creationTime),
+                        ) < TIME_THRESHOLD;
 
+                        return (
+                            <Message
+                                key={message._id}
+                                id={message._id}
+                                memberId={message.memberId}
+                                authorImage={message.user.image}
+                                authorName={message.user.name}
+                                isAuthor={false}
+                                reactions={message.reactions}
+                                body={message.body}
+                                image={message.image}
+                                updatedAt={message.updatedAt}
+                                createdAt={message._creationTime}
+                                isEditing={false}
+                                setEditingId={() => { }}
+                                isCompact={isCompact}
+                                hideThreadButton={false}
+                                threadCount={message.threadCount}
+                                threadImage={message.threadImage}
+                                threadTimeStamp={message.threadTimeStamp}
+                            />
+                        );
+                    })}
                 </div>
             ))}
         </div>
