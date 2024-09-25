@@ -7,10 +7,12 @@ import {
     ResizablePanelGroup
 } from "@/components/ui/resizable";
 import SideBar from "./sidebar";
-import { ToolBar } from "./toolbar";
 import WorkspaceSidebar from "./workspace-sidebar";
+import { ToolBar } from "./toolbar";
+import { Thread } from "@/features/members/components/Thread";
 
 import { usePanel } from "@/hooks/usePanel";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 interface WorkspaceIdLayoutProps {
     children: React.ReactNode;
@@ -48,9 +50,10 @@ const WorkspaceIdLayout = ({ children }: WorkspaceIdLayoutProps) => {
                                 <ResizableHandle withHandle />
                                 <ResizablePanel minSize={20} defaultSize={29}>
                                     {parentMessageId ? (
-                                        <div>
-                                            Thread
-                                        </div>
+                                        <Thread
+                                            messageId={parentMessageId as Id<"messages">}
+                                            onClose={onClose}
+                                        />
                                     ) : (
                                         <div className="flex h-full items-center justify-center">
                                             <Loader className="size-5 animate-spin text-muted-foreground" />

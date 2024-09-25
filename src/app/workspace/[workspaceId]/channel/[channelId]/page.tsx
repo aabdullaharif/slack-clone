@@ -5,7 +5,7 @@ import { Loader, TriangleAlert } from "lucide-react";
 import { ChatInput } from "./chat-input";
 import { MessageList } from "@/components/MessageList";
 
-import { useGetMessages } from "@/features/members/api/useGetMessages";
+import { useGetMessages } from "@/features/messages/api/useGetMessages";
 import { useChannelId } from "@/hooks/useChannelId";
 import { useGetChannel } from "@/features/channels/api/useGetChannel";
 

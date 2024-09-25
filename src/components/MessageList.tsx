@@ -3,11 +3,11 @@ import { Loader } from "lucide-react";
 import { Message } from "./Message";
 import { ChannelHero } from "./ChannelHero";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
-import { GetMessagesReturnType } from "@/features/members/api/useGetMessages";
 
 import { Id } from "../../convex/_generated/dataModel";
 import { useWorkspaceId } from "@/hooks/useWorkspaceId";
 import { useCurrentMember } from "@/features/members/api/useCurrentMember";
+import { GetMessagesReturnType } from "@/features/messages/api/useGetMessages";
 
 const TIME_THRESHOLD = 5;
 
